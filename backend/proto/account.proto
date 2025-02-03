@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "harmony/pb";
+
+service Account {
+  rpc Register(RegisterReq) returns (RegisterRes);
+  rpc Login(LoginReq) returns (LoginRes);
+  rpc ConfirmEmail(ConfirmEmailReq) returns (ConfirmEmailRes);
+  rpc GetNewTokens(GetNewTokensReq) returns (GetNewTokensRes);
+}
+
+message RegisterReq{
+  string Email = 1;
+  string Password = 2;
+  string Name = 3;
+}
+message RegisterRes{
+  string Email = 1;
+}
+
+message LoginReq{
+  string Email = 1;
+  string Password = 2;
+}
+message LoginRes{
+  string Id = 1;
+  string AccessToken = 2;
+  string RefreshToken = 3;
+}
+
+message ConfirmEmailReq{
+  string Token = 1;
+}
+message ConfirmEmailRes{
+  string id = 1;
+  string AccessToken = 2;
+  string RefreshToken = 3;
+}
+
+message GetNewTokensReq {
+  string RefreshToken = 1;
+}
+message GetNewTokensRes{
+  string RefreshToken = 1;
+  string AccessToken = 2;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option go_package = "harmony/pb";
+
+service Email{
+  rpc ConfirmEmail(ConfirmEmailSendReq) returns(ConfirmEmailSendRes);
+}
+
+message ConfirmEmailSendReq{
+  string Email = 1;
+  string Token = 2;
+}
+message ConfirmEmailSendRes{
+}
