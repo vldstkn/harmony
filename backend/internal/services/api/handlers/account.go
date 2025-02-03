@@ -50,7 +50,10 @@ func NewAccountHandler(router *chi.Mux, deps *AccountHandlerDeps) {
 
 	router.Route("/users", func(r chi.Router) {
 		r.Use(middleware.IsAuthed(handler.Config.JWTSecret))
-		r.Get("/", handler.Search())
+		r.Get("/", handler.FindByName())
+		r.Post("/add-friend", handler.AddFriend())
+		r.Post("/delete-friend", handler.DeleteFriend())
+		r.Get("/friends", handler.FindFriendsByName())
 	})
 }
 
@@ -119,10 +122,71 @@ func (handler *AccountHandler) ConfirmEmail() http.HandlerFunc {
 	}
 }
 
-func (handler *AccountHandler) Search() http.HandlerFunc {
+func (handler *AccountHandler) FindByName() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		search := r.URL.Query().Get("search")
-		fmt.Println(search)
-		res.Json(w, nil, 200)
+		userId := r.Context().Value("authData").(middleware.AuthData).Id
+		name := r.URL.Query().Get("name")
+		fmt.Println(name)
+		response, _ := handler.AccountClient.FindByName(context.Background(), &pb.FindByNameReq{
+			Id:   userId,
+			Name: name,
+		})
+		res.Json(w, dto.FindByNameRes{
+			Users: response.Users,
+		}, 200)
+	}
+}
+
+func (handler *AccountHandler) AddFriend() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId := r.Context().Value("authData").(middleware.AuthData).Id
+		body, err := req.HandleBody[dto.AddFriendReq](r)
+		if err != nil {
+			handler.Logger.Error("req.HandleBody[dto.AddFriendReq]", slog.String("err", err.Error()))
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		_, err = handler.AccountClient.AddFriend(context.Background(), &pb.AddFriendReq{
+			FriendId: body.FriendId,
+			UserId:   userId,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		res.Json(w, nil, 201)
+	}
+}
+func (handler *AccountHandler) DeleteFriend() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId := r.Context().Value("authData").(middleware.AuthData).Id
+		body, err := req.HandleBody[dto.DeleteFriendReq](r)
+		if err != nil {
+			handler.Logger.Error("req.HandleBody[dto.DeleteFriendReq]", slog.String("err", err.Error()))
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		_, err = handler.AccountClient.DeleteFriend(context.Background(), &pb.DeleteFriendReq{
+			FriendId: body.FriendId,
+			UserId:   userId,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		res.Json(w, nil, 201)
+	}
+}
+func (handler *AccountHandler) FindFriendsByName() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId := r.Context().Value("authData").(middleware.AuthData).Id
+		name := r.URL.Query().Get("name")
+		response, _ := handler.AccountClient.FindFriendsByName(context.Background(), &pb.FindFriendsByNameReq{
+			Name:   name,
+			UserId: userId,
+		})
+		res.Json(w, dto.FindFriendsByNameRes{
+			Users: response.Users,
+		}, 200)
 	}
 }

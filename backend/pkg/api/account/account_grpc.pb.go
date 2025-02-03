@@ -19,10 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Account_Register_FullMethodName     = "/Account/Register"
-	Account_Login_FullMethodName        = "/Account/Login"
-	Account_ConfirmEmail_FullMethodName = "/Account/ConfirmEmail"
-	Account_GetNewTokens_FullMethodName = "/Account/GetNewTokens"
+	Account_Register_FullMethodName          = "/Account/Register"
+	Account_Login_FullMethodName             = "/Account/Login"
+	Account_ConfirmEmail_FullMethodName      = "/Account/ConfirmEmail"
+	Account_GetNewTokens_FullMethodName      = "/Account/GetNewTokens"
+	Account_FindByName_FullMethodName        = "/Account/FindByName"
+	Account_AddFriend_FullMethodName         = "/Account/AddFriend"
+	Account_DeleteFriend_FullMethodName      = "/Account/DeleteFriend"
+	Account_FindFriendsByName_FullMethodName = "/Account/FindFriendsByName"
 )
 
 // AccountClient is the client API for Account service.
@@ -33,6 +37,10 @@ type AccountClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginRes, error)
 	ConfirmEmail(ctx context.Context, in *ConfirmEmailReq, opts ...grpc.CallOption) (*ConfirmEmailRes, error)
 	GetNewTokens(ctx context.Context, in *GetNewTokensReq, opts ...grpc.CallOption) (*GetNewTokensRes, error)
+	FindByName(ctx context.Context, in *FindByNameReq, opts ...grpc.CallOption) (*FindByNameRes, error)
+	AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendRes, error)
+	DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*DeleteFriendRes, error)
+	FindFriendsByName(ctx context.Context, in *FindFriendsByNameReq, opts ...grpc.CallOption) (*FindFriendsByNameRes, error)
 }
 
 type accountClient struct {
@@ -83,6 +91,46 @@ func (c *accountClient) GetNewTokens(ctx context.Context, in *GetNewTokensReq, o
 	return out, nil
 }
 
+func (c *accountClient) FindByName(ctx context.Context, in *FindByNameReq, opts ...grpc.CallOption) (*FindByNameRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindByNameRes)
+	err := c.cc.Invoke(ctx, Account_FindByName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) AddFriend(ctx context.Context, in *AddFriendReq, opts ...grpc.CallOption) (*AddFriendRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddFriendRes)
+	err := c.cc.Invoke(ctx, Account_AddFriend_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) DeleteFriend(ctx context.Context, in *DeleteFriendReq, opts ...grpc.CallOption) (*DeleteFriendRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteFriendRes)
+	err := c.cc.Invoke(ctx, Account_DeleteFriend_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) FindFriendsByName(ctx context.Context, in *FindFriendsByNameReq, opts ...grpc.CallOption) (*FindFriendsByNameRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindFriendsByNameRes)
+	err := c.cc.Invoke(ctx, Account_FindFriendsByName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServer is the server API for Account service.
 // All implementations must embed UnimplementedAccountServer
 // for forward compatibility.
@@ -91,6 +139,10 @@ type AccountServer interface {
 	Login(context.Context, *LoginReq) (*LoginRes, error)
 	ConfirmEmail(context.Context, *ConfirmEmailReq) (*ConfirmEmailRes, error)
 	GetNewTokens(context.Context, *GetNewTokensReq) (*GetNewTokensRes, error)
+	FindByName(context.Context, *FindByNameReq) (*FindByNameRes, error)
+	AddFriend(context.Context, *AddFriendReq) (*AddFriendRes, error)
+	DeleteFriend(context.Context, *DeleteFriendReq) (*DeleteFriendRes, error)
+	FindFriendsByName(context.Context, *FindFriendsByNameReq) (*FindFriendsByNameRes, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -112,6 +164,18 @@ func (UnimplementedAccountServer) ConfirmEmail(context.Context, *ConfirmEmailReq
 }
 func (UnimplementedAccountServer) GetNewTokens(context.Context, *GetNewTokensReq) (*GetNewTokensRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNewTokens not implemented")
+}
+func (UnimplementedAccountServer) FindByName(context.Context, *FindByNameReq) (*FindByNameRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByName not implemented")
+}
+func (UnimplementedAccountServer) AddFriend(context.Context, *AddFriendReq) (*AddFriendRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFriend not implemented")
+}
+func (UnimplementedAccountServer) DeleteFriend(context.Context, *DeleteFriendReq) (*DeleteFriendRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFriend not implemented")
+}
+func (UnimplementedAccountServer) FindFriendsByName(context.Context, *FindFriendsByNameReq) (*FindFriendsByNameRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindFriendsByName not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -206,6 +270,78 @@ func _Account_GetNewTokens_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Account_FindByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindByNameReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).FindByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_FindByName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).FindByName(ctx, req.(*FindByNameReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_AddFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFriendReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).AddFriend(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_AddFriend_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).AddFriend(ctx, req.(*AddFriendReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_DeleteFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFriendReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).DeleteFriend(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_DeleteFriend_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).DeleteFriend(ctx, req.(*DeleteFriendReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_FindFriendsByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindFriendsByNameReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).FindFriendsByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_FindFriendsByName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).FindFriendsByName(ctx, req.(*FindFriendsByNameReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Account_ServiceDesc is the grpc.ServiceDesc for Account service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +364,22 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetNewTokens",
 			Handler:    _Account_GetNewTokens_Handler,
+		},
+		{
+			MethodName: "FindByName",
+			Handler:    _Account_FindByName_Handler,
+		},
+		{
+			MethodName: "AddFriend",
+			Handler:    _Account_AddFriend_Handler,
+		},
+		{
+			MethodName: "DeleteFriend",
+			Handler:    _Account_DeleteFriend_Handler,
+		},
+		{
+			MethodName: "FindFriendsByName",
+			Handler:    _Account_FindFriendsByName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

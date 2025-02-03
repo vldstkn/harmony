@@ -115,3 +115,25 @@ func (handler *Handler) GetNewTokens(ctx context.Context, r *pb.GetNewTokensReq)
 		AccessToken:  aT,
 	}, nil
 }
+func (handler *Handler) FindByName(ctx context.Context, r *pb.FindByNameReq) (*pb.FindByNameRes, error) {
+	users := handler.Service.FindByName(r.Id, r.Name)
+	res := UsersFromModelToProto(users)
+	return &pb.FindByNameRes{
+		Users: res,
+	}, nil
+}
+func (handler *Handler) AddFriend(ctx context.Context, r *pb.AddFriendReq) (*pb.AddFriendRes, error) {
+	err := handler.Service.AddFriend(r.UserId, r.FriendId)
+	return nil, err
+}
+func (handler *Handler) DeleteFriend(ctx context.Context, r *pb.DeleteFriendReq) (*pb.DeleteFriendRes, error) {
+	err := handler.Service.DeleteFriend(r.UserId, r.FriendId)
+	return nil, err
+}
+func (handler *Handler) FindFriendsByName(ctx context.Context, r *pb.FindFriendsByNameReq) (*pb.FindFriendsByNameRes, error) {
+	users := handler.Service.FindFriendsByName(r.UserId, r.Name)
+	res := UsersFromModelToProto(users)
+	return &pb.FindFriendsByNameRes{
+		Users: res,
+	}, nil
+}

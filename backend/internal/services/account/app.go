@@ -56,6 +56,7 @@ func (app *App) Run() {
 		slog.String("Name", "Account"),
 	)
 	err = server.Serve(lis)
+	server.Stop()
 	if err != nil {
 		panic(err)
 	}

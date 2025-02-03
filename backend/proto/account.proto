@@ -7,6 +7,17 @@ service Account {
   rpc Login(LoginReq) returns (LoginRes);
   rpc ConfirmEmail(ConfirmEmailReq) returns (ConfirmEmailRes);
   rpc GetNewTokens(GetNewTokensReq) returns (GetNewTokensRes);
+  rpc FindByName(FindByNameReq) returns (FindByNameRes);
+  rpc AddFriend(AddFriendReq) returns (AddFriendRes);
+  rpc DeleteFriend(DeleteFriendReq) returns (DeleteFriendRes);
+  rpc FindFriendsByName(FindFriendsByNameReq) returns (FindFriendsByNameRes);
+}
+
+message UserPublic{
+  int64 Id = 1;
+  string Name = 2;
+  string Email = 3;
+  string CreatedAt = 4;
 }
 
 message RegisterReq{
@@ -23,7 +34,7 @@ message LoginReq{
   string Password = 2;
 }
 message LoginRes{
-  string Id = 1;
+  int64 Id = 1;
   string AccessToken = 2;
   string RefreshToken = 3;
 }
@@ -32,7 +43,7 @@ message ConfirmEmailReq{
   string Token = 1;
 }
 message ConfirmEmailRes{
-  string id = 1;
+  int64 Id = 1;
   string AccessToken = 2;
   string RefreshToken = 3;
 }
@@ -43,4 +54,30 @@ message GetNewTokensReq {
 message GetNewTokensRes{
   string RefreshToken = 1;
   string AccessToken = 2;
+}
+message FindByNameReq{
+  int64 Id = 1;
+  string Name = 2;
+}
+message FindByNameRes{
+  repeated UserPublic users = 1;
+}
+message AddFriendReq{
+  int64 UserId = 1;
+  int64 FriendId = 2;
+}
+message AddFriendRes{
+}
+message DeleteFriendReq{
+  int64 UserId = 1;
+  int64 FriendId = 2;
+}
+message DeleteFriendRes{
+}
+message FindFriendsByNameReq{
+  int64 UserId = 1;
+  string Name = 2;
+}
+message FindFriendsByNameRes{
+  repeated UserPublic users = 1;
 }

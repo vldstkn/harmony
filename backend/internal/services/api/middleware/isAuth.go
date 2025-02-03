@@ -8,7 +8,7 @@ import (
 )
 
 type AuthData struct {
-	Id string
+	Id int64
 }
 
 func writeUnauthed(w http.ResponseWriter) {

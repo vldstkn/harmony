@@ -6,7 +6,7 @@ import (
 )
 
 type Data struct {
-	Id string
+	Id int64
 }
 
 type JWT struct {
@@ -49,7 +49,7 @@ func (j *JWT) Parse(token string) (bool, *Data) {
 		return false, nil
 	}
 
-	id := t.Claims.(jwt.MapClaims)["Id"].(string)
+	id := int64(t.Claims.(jwt.MapClaims)["Id"].(float64))
 	return t.Valid, &Data{
 		Id: id,
 	}

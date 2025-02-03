@@ -45,6 +45,7 @@ func (app *App) Run() {
 		slog.String("Address", app.Config.EmailAddress),
 		slog.String("Name", "Email"),
 	)
+	defer server.Stop()
 	err = server.Serve(lis)
 	if err != nil {
 		panic(err)
