@@ -2,6 +2,7 @@ package account
 
 import (
 	"errors"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"harmony/internal/interfaces"
 	"harmony/internal/models"
@@ -79,6 +80,7 @@ func (service *Service) ConfirmEmail(secret, token string) (int64, error) {
 }
 
 func (service *Service) FindByName(id int64, name string) []models.User {
+	fmt.Println(id, name)
 	users := service.Repository.FindByName(id, name)
 	return users
 }

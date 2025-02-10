@@ -4,6 +4,17 @@ acc:
 	@air -c air/.account.toml
 email:
 	@air -c air/.email.toml
+room:
+	@air -c air/.room.toml
+chat:
+	@air -c air/.chat.toml
+mes:
+	@air -c air/.messages.toml
+ws:
+	@air -c air/.ws.toml
+notifs:
+	@air -c air/.notifs.toml
+
 pb:
 ifdef s
 	$(MAKE) gen SERVICE=$(s)

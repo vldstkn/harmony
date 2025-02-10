@@ -1,10 +1,13 @@
 package account
 
 import (
+	"github.com/IBM/sarama"
 	"google.golang.org/grpc"
 	"harmony/internal/config"
+	accconf "harmony/internal/services/account/config"
 	pb "harmony/pkg/api/account"
 	"harmony/pkg/db"
+	"log"
 	"log/slog"
 	"net"
 )
@@ -35,6 +38,12 @@ func (app *App) Run() {
 	if err != nil {
 		panic(err)
 	}
+	defer lis.Close()
+	config := accconf.NewProducerConfig()
+	producer, err := sarama.NewSyncProducer([]string{app.Config.KafkaAddr}, config)
+	if err != nil {
+		log.Fatalf("Ошибка создания producer: %v", err)
+	}
 
 	repository := NewRepository(app.DB)
 
@@ -44,9 +53,10 @@ func (app *App) Run() {
 	})
 
 	handler := NewHandler(&HandlerDeps{
-		Config:  app.Config,
-		Logger:  app.Logger,
-		Service: service,
+		Config:   app.Config,
+		Logger:   app.Logger,
+		Service:  service,
+		Producer: producer,
 	})
 
 	server := grpc.NewServer(opts...)

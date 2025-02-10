@@ -20,4 +20,8 @@ func NewHandlers(router *chi.Mux, deps *HandlersDeps) {
 		Service: deps.Service,
 		Logger:  deps.Logger,
 	})
+	handlers.NewRoomHandler(router, &handlers.RoomHandlerDeps{
+		Logger: deps.Logger,
+		Config: deps.Config,
+	})
 }

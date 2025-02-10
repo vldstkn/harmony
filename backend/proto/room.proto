@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option go_package = "harmony/pb";
+
+service Room{
+  rpc CreateRoom(CreateRoomReq) returns(CreateRoomRes);
+  rpc DeleteRoom(DeleteRoomReq) returns(DeleteRoomRes);
+  rpc AddUsersToRoom(AddUsersToRoomReq) returns (AddUsersToRoomRes);
+  rpc RemoveUsersFromRoom(RemoveUsersFromRoomReq) returns (RemoveUsersFromRoomRes);
+  rpc GetRoomsByUserId(GetRoomsByUserIdReq) returns (GetRoomsByUserIdRes);
+  rpc GetRoom(GetRoomReq) returns (GetRoomRes);
+  rpc CanSendMessage(CanSendMessageReq) returns (CanSendMessageRes);
+}
+
+message RoomPublic{
+  int64 Id = 1;
+  string Name = 2;
+  int64 CreatorId = 3;
+  repeated int64 ParticipantsId = 4;
+}
+
+message CreateRoomReq{
+  int64 CreatorId = 1;
+  repeated int64 Participants = 2;
+  string Name = 3;
+}
+message CreateRoomRes{
+  int64 RoomId = 1;
+}
+
+message DeleteRoomReq{
+  int64 UserId = 1;
+  int64 RoomId = 2;
+}
+message DeleteRoomRes{
+}
+
+message AddUsersToRoomReq{
+  int64 CreatorId = 1;
+  int64 RoomId = 2;
+  repeated int64 UsersId = 3;
+}
+message AddUsersToRoomRes{
+}
+
+message RemoveUsersFromRoomReq{
+  int64 CreatorId = 1;
+  int64 RoomId = 2;
+  repeated int64 UsersId = 3;
+}
+message RemoveUsersFromRoomRes{
+}
+
+message GetRoomsByUserIdReq{
+  int64 UserId = 1;
+}
+message GetRoomsByUserIdRes{
+  repeated RoomPublic Rooms = 1;
+}
+
+message GetRoomReq{
+  int64 RoomId = 1;
+  int64 UserId = 2;
+}
+message GetRoomRes{
+  RoomPublic Room =1;
+}
+
+message CanSendMessageReq{
+  int64 UserId = 1;
+  int64 RoomId = 2;
+}
+
+message CanSendMessageRes{
+  bool canSendMessage = 1;
+}

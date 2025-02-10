@@ -46,10 +46,10 @@ func (app *App) Run() {
 		slog.String("Name", "Api"),
 	)
 
-	defer server.Shutdown(context.Background())
 	err := server.ListenAndServe()
-	server.Close()
-	
+	defer server.Shutdown(context.Background())
+	defer server.Close()
+
 	if err != nil {
 		log.Fatalln("The server is not starting, the port may be busy: ", app.Config.ApiAddress)
 	}

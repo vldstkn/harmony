@@ -1,0 +1,29 @@
+syntax="proto3";
+
+option go_package = "harmony/pbmes";
+
+service Messages {
+  rpc Create(CreateReq) returns (CreateRes);
+  rpc Delete(DeleteReq) returns (DeleteRes);
+  rpc UpdateStatus(UpdateStatusReq) returns (UpdateStatusRes);
+}
+message CreateReq{
+  int64 UserId = 1;
+  int64 RoomId = 2;
+  string Text = 3;
+}
+message CreateRes{
+}
+message DeleteReq{
+  int64 MessageId = 1;
+  int64 UserId = 2;
+}
+message DeleteRes{
+}
+message UpdateStatusReq{
+  int64 MessageId = 1;
+  int64 RoomId = 2;
+  int64 UserId = 3;
+}
+message UpdateStatusRes{
+}

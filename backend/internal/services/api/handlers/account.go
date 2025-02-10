@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"harmony/internal/config"
 	"harmony/internal/interfaces"
@@ -126,7 +125,6 @@ func (handler *AccountHandler) FindByName() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId := r.Context().Value("authData").(middleware.AuthData).Id
 		name := r.URL.Query().Get("name")
-		fmt.Println(name)
 		response, _ := handler.AccountClient.FindByName(context.Background(), &pb.FindByNameReq{
 			Id:   userId,
 			Name: name,
